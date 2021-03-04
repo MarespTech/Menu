@@ -10,28 +10,48 @@ import Dashboard from './components/Dashboard';
 import CategoriesForm from './components/Categories/CategoriesForm';
 import CategoriesTable from './components/Categories/CategoriesTable';
 
-function App() {
+import MenuForm from './components/Menu/MenuForm';
+import MenuTable from './components/Menu/MenuTable';
 
+function App() {
+    // State for categories
     const [ categories, saveCategories ] = useState([]);
     const [ selectCategories, saveSelectCategories ] = useState(true);
+
+    // State for menu
+    const [ menu, saveMenu ] = useState([]);
+    const [ selectMenu, saveSelectMenu ] = useState(true);
 
 
     useEffect(() => {
         const getCategories = async() => {
-            const url = 'http://localhost/dashboard/API.php?function=select_categories';
+            const url = 'http://localhost/menu_dashboard/API/API.php?function=select_categories';
             const response = await axios.get(url)
             const result = response.data;
             if(result.ok){
                 saveCategories(result.results);
             }
         }
+        const getMenu = async() => {
+            const url = 'http://localhost/menu_dashboard/API/API.php?function=select_menu';
+            const response = await axios.get(url)
+            const result = response.data;
+            if(result.ok){
+                saveMenu(result.results);
+            }
+        }
 
         if(selectCategories) {
             getCategories();
-            console.log(categories);
             saveSelectCategories(false);
         }
-    }, [selectCategories])
+
+        if(selectMenu) {
+            getMenu();
+            saveSelectMenu(false);
+        }
+
+    }, [selectCategories, selectMenu])
 
     return (
         <Router>
@@ -42,10 +62,12 @@ function App() {
                         <div>
                             <Navbar
                                 saveSelectCategories={saveSelectCategories}
+                                saveSelectMenu={saveSelectMenu}
                             />
                             <div className="row">
                                 <Sidebar
                                     saveSelectCategories={saveSelectCategories}
+                                    saveSelectMenu={saveSelectMenu}
                                 />
                                 <Dashboard/>
                             </div>
@@ -60,18 +82,60 @@ function App() {
                         <div>
                             <Navbar
                                 saveSelectCategories={saveSelectCategories}
+                                saveSelectMenu={saveSelectMenu}
                             />
                             <div className="row">
                                 <Sidebar
                                     saveSelectCategories={saveSelectCategories}
+                                    saveSelectMenu={saveSelectMenu}
                                 />
 
                                 <div className="col s12 l10">
                                     <h3>Categories</h3>
                                     <div className="row">
-                                        <CategoriesForm/>
+                                        <CategoriesForm
+                                            categories={categories}
+                                            saveCategories={saveCategories}
+                                        />
                                         <CategoriesTable
                                             categories={categories}
+                                            saveCategories={saveCategories}
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    )}}
+                />
+                <Route 
+                    exact path="/menu"
+                    component={() => {
+
+                    return(
+                        <div>
+                            <Navbar
+                                saveSelectCategories={saveSelectCategories}
+                                saveSelectMenu={saveSelectMenu}
+                            />
+                            <div className="row">
+                                <Sidebar
+                                    saveSelectCategories={saveSelectCategories}
+                                    saveSelectMenu={saveSelectMenu}
+                                />
+
+                                <div className="col s12 l10">
+                                    <h3>Categories</h3>
+                                    <div className="row">
+                                        <MenuForm
+                                            categories={categories}
+                                            menu={menu}
+                                            saveMenu={saveMenu}
+                                        />
+                                        <MenuTable
+                                            categories={categories}
+                                            menu={menu}
+                                            saveMenu={saveMenu}
                                         />
                                     </div>
                                 </div>

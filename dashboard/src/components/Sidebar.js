@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Sidebar = ({saveSelectCategories}) => {
+const Sidebar = ({saveSelectCategories, saveSelectMenu}) => {
     return ( 
         <div id="sidebar" className="col l2 hide-on-med-and-down">
             <div className="row">
@@ -26,7 +26,10 @@ const Sidebar = ({saveSelectCategories}) => {
                             <i className="material-icons">view_module</i>  Categories
                         </li>
                     </Link>
-                    <Link to={'/'}>
+                    <Link 
+                        to={'/menu'}
+                        onClick={ () => saveSelectMenu(true) }
+                    >
                         <li className="waves-effect">
                             <i className="material-icons">web</i>  Menu
                         </li>

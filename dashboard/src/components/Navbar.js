@@ -4,7 +4,7 @@ import 'materialize-css';
 import { Navbar as Navb, Icon } from 'react-materialize';
 
 
-const Navbar = ({saveSelectCategories}) => {
+const Navbar = ({saveSelectCategories, saveSelectMenu}) => {
 
     return ( 
 
@@ -48,7 +48,15 @@ const Navbar = ({saveSelectCategories}) => {
                                 <i className="material-icons">view_module</i>  Categories
                             </Link>
                         </li>
-                        <li><Link to={'/'}><i className="material-icons">web</i>  Menu</Link></li>
+                        <li>
+                            <Link 
+                                to={'/menu'}
+                                onClick={ ()=> saveSelectMenu(true) }
+                                
+                            >
+                                <i className="material-icons">web</i>  Menu
+                            </Link>
+                        </li>
                         <li><Link to={'/'}><i className="material-icons">storage</i>  Stocks</Link></li>
                         <li><Link to={'/'}><i className="material-icons">insert_chart</i>  Reports</Link></li>
                         <li><Link to={'/'}><i className="material-icons">people</i>  Users</Link></li>

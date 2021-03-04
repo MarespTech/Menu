@@ -5,8 +5,7 @@ import $ from 'jquery';
 import 'datatables.net';
 
 
-const CategoriesTable = ({categories}) => {
-
+const CategoriesTable = ({categories, saveCategories}) => {
     const data = [];
     let count = 1;
 
@@ -46,9 +45,23 @@ const CategoriesTable = ({categories}) => {
           })
           .then((willDelete) => {
             if (willDelete) {
-              swal(`${name} has been deleted!`, {
-                icon: "success",
-              });
+
+                const url = 'http://localhost/menu_dashboard/API/API.php?function=delete_category';
+                axios.post(url, {
+                    id
+                })
+                .then(response => {
+                    let result = response.data;
+                    if(result.ok) {
+                        swal(`${name} has been deleted`, {
+                            icon: "success",
+                        });
+                        saveCategories([...categories.filter(cat => cat.id !== id)]);
+                    }
+                    else {
+                        swal('Error!',`${result.message}`, 'error');
+                    }
+                });  
             }
           });
     }
@@ -58,7 +71,7 @@ const CategoriesTable = ({categories}) => {
 
         
         swal({
-            text: 'Write the new name.',
+            text: `Write the new name for ${category.name}.`,
             content: "input",
             button: {
               text: "Change",
@@ -67,16 +80,40 @@ const CategoriesTable = ({categories}) => {
         })
           .then(name => {
             if (!name) {
-                swal(`You have to write a new name`, {
+                swal(`You have to write a new name.`, {
                     icon: "error",
                   });
                 return;
             }
+            const url = 'http://localhost/menu_dashboard/API/API.php?function=edit_category';
+            axios.post(url, {
+                name,
+                id
+            })
+                .then(response => {
+                    let result = response.data;
+                    if(result.ok) {
+                        swal(`${category.name} has been changed to ${name} !`, {
+                            icon: "success",
+                        });
+                        changeCat(id, name);
+                    }
+                    else {
+                        swal('Error!',`${result.message}`, 'error');
+                    }
+                });            
+        });
+    }
 
-            swal(`${category.name} has been changed to ${name} !`, {
-                icon: "success",
-              });
-          })
+    const changeCat = (id, name) => {
+        let new_categories = [...categories];
+        for (var i in categories) {
+            if (categories[i].id === id) {
+               categories[i].name = name;
+               break;
+            }
+        }
+        saveCategories([...new_categories]);
     }
          
     return ( 
@@ -85,7 +122,7 @@ const CategoriesTable = ({categories}) => {
             <div className="card">
                 <div className="card-content">
                     <span className="card-title">Categories</span>
-                    <table id="categories-table" className="highlight centered " ref={elem=>$(elem).DataTable()}>
+                    <table id="table" className="highlight centered " ref={elem=>$(elem).DataTable()}>
                         <thead>
                             <tr>
                                 <th>#</th>

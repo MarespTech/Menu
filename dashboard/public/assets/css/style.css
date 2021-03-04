@@ -349,10 +349,20 @@ body {
 	color: #fff;
 }
 
-#categories-table_filter {
+#table_filter {
 	float: right;
 	width: 50%;
 }
-#categories-table_filter label input {
+#table_filter label input {
 	width: 90%
+}
+
+.table-img {
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.input-field {
+	margin-top: .5rem!important;
+	margin-bottom: .5rem!important;
 }

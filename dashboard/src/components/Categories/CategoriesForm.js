@@ -2,33 +2,41 @@ import React, { useState } from 'react';
 import swal from 'sweetalert';
 import axios from 'axios';
 
-const CategoriesForm = () => {
+const CategoriesForm = ({categories, saveCategories}) => {
 
     const [ category, saveCategory ] = useState('');
 
     const addCategory = async (e) => {
         e.preventDefault();
 
-        if(!category) {
+        if(category.trim() === '') {
             swal(`You have to write a name for the category`, {
                 icon: "error",
               });
             return;
         }
 
-        const url = 'http://localhost/dashboard/API.php?function=add_category';
+        const url = 'http://localhost/menu_dashboard/API/API.php?function=add_category';
         axios.post(url, {
             name: category
         })
             .then(response => {
-                console.log(response);
-            })
+                let result = response.data;
+                if(result.ok) {
+                    swal('Success!',`${result.message}`, 'success');
+                    saveCategories([...categories, {id: result.id, name: category}]);
+                    saveCategory('');
+                }
+                else {
+                    swal('Error!',`${result.message}`, 'error');
+                }
+            });
 
         
     }
 
     return ( 
-        <div className="col s12 l4 mt20">
+        <div className="col s12 l4">
             
             <div className="card">
                 <div className="card-content">
