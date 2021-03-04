@@ -358,8 +358,8 @@ body {
 }
 
 .table-img {
-	max-width: 150px;
-	max-height: 150px;
+	max-width: 120px!important;
+	max-height: 120px!important;
 }
 
 .input-field {

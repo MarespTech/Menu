@@ -206,13 +206,13 @@ const MenuForm = ({categories, menu, saveMenu}) => {
                                 />
                             </div>
 
-                            <div class="file-field input-field col s12">
-                                <div class="btn light-blue darken-2">
+                            <div className="file-field input-field col s12">
+                                <div className="btn light-blue darken-2">
                                     <span>Picture</span>
                                     <input type="file" onChange={onChangeFile}/>
                                 </div>
-                                <div class="file-path-wrapper">
-                                    <input name="picture" class="file-path validate" type="text"/>
+                                <div className="file-path-wrapper">
+                                    <input name="picture" className="file-path validate" type="text"/>
                                 </div>
                             </div>
 

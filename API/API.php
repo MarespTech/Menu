@@ -255,8 +255,6 @@
             }
             break;
         case "add_menu":
-            $plate = json_decode(file_get_contents("php://input"));
-            
             $name        = $_POST['name'];
             $cost        = $_POST['cost'];
             $description = $_POST['description'];
@@ -340,7 +338,86 @@
 
             break;
         case "edit_menu":
-            
+            $id          = $_POST['id'];
+            $name        = $_POST['name'];
+            $cost        = $_POST['cost'];
+            $description = $_POST['description'];
+            $special     = $_POST['special'];
+            $category    = $_POST['category'];
+            $upload_name = "assets/img/no-image.png";
+
+
+            $upload_dir = 'uploads/';
+
+            if(isset($_FILES["picture"]))
+            {
+                $avatar_name = $_FILES["picture"]["name"];
+                $avatar_tmp_name = $_FILES["picture"]["tmp_name"];
+                $error = $_FILES["picture"]["error"];
+
+                if($error > 0){
+                    echo '{
+                            "ok": false,
+                            "message": "An error was ocurred while the file was uploading"
+                        }';
+                    break;
+                }else 
+                {
+                    $random_name = rand(1000,1000000)."-".$avatar_name;
+                    $upload_name = $upload_dir.strtolower($random_name);
+                    $upload_name = preg_replace('/\s+/', '-', $upload_name);
+
+                    if(move_uploaded_file($avatar_tmp_name , "../dashboard/public/".$upload_name)) {
+                        $response = 1;
+                    }else
+                    {
+                        echo '{
+                            "ok": false,
+                            "message": "An error was ocurred while the file was uploading"
+                        }';
+                        break;
+                    }
+                }    
+
+            }
+
+            if(trim($name) == '') {
+                echo '{
+                    ok: false,
+                    message: "The name is not specified"
+                }';
+                break;
+            }
+            if(trim($description) == '') {
+                echo '{
+                    ok: false,
+                    message: "The description is not specified"
+                }';
+                break;
+            }
+            if(trim($cost) == '') {
+                echo '{
+                    ok: false,
+                    message: "The cost is not specified"
+                }';
+                break;
+            }
+
+            $query_insert  = $connection->prepare("UPDATE menu SET `name_menu` = ?, `cost_menu` = ?, `description_menu` = ?, `picture_menu` = ?, `special_menu` = ?, `category_id` = ? WHERE id_menu = ?");
+            $query_insert->bind_param("sdssiii", $name, $cost, $description, $upload_name, $special, $category, $id);
+            $result_insert = $query_insert->execute();
+            if($result_insert) {
+                echo '{
+                    "ok": true,
+                    "message": "The plate has edited succesfully.",
+                    "picture_url": "'. $upload_name .'"
+                }';
+            } else {
+                echo '{
+                    "ok": false,
+                    "message": "'. $connection->error .'"
+                }';
+            }
 
             break;
         case "delete_menu": 
