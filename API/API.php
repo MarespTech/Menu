@@ -344,7 +344,8 @@
             $description = $_POST['description'];
             $special     = $_POST['special'];
             $category    = $_POST['category'];
-            $upload_name = "assets/img/no-image.png";
+            $upload_name = $_POST['pictureName'];
+            $updatePicture = "";
 
 
             $upload_dir = 'uploads/';
@@ -369,6 +370,7 @@
 
                     if(move_uploaded_file($avatar_tmp_name , "../dashboard/public/".$upload_name)) {
                         $response = 1;
+                        $updatePicture = "`picture_menu` = '$upload_name',";
                     }else
                     {
                         echo '{
@@ -403,8 +405,8 @@
                 break;
             }
 
-            $query_insert  = $connection->prepare("UPDATE menu SET `name_menu` = ?, `cost_menu` = ?, `description_menu` = ?, `picture_menu` = ?, `special_menu` = ?, `category_id` = ? WHERE id_menu = ?");
-            $query_insert->bind_param("sdssiii", $name, $cost, $description, $upload_name, $special, $category, $id);
+            $query_insert  = $connection->prepare("UPDATE menu SET `name_menu` = ?, `cost_menu` = ?, `description_menu` = ?, $updatePicture `special_menu` = ?, `category_id` = ? WHERE id_menu = ?");
+            $query_insert->bind_param("sdsiii", $name, $cost, $description, $special, $category, $id);
             $result_insert = $query_insert->execute();
             if($result_insert) {
                 echo '{

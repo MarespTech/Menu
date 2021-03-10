@@ -12,7 +12,7 @@ const MenuModal = ({plate, categories, isOpen, setIsOpen, saveMenu, menu}) => {
         categoryEdit: plate.id_category,
         specialEdit: plate.special,
         pictureEdit: '',
-        id: plate.id
+        idEdit: plate.id
     });
 
     useEffect(() => {
@@ -22,12 +22,13 @@ const MenuModal = ({plate, categories, isOpen, setIsOpen, saveMenu, menu}) => {
             descriptionEdit: plate.description,
             categoryEdit: plate.id_category,
             specialEdit: plate.special,
-            pictureEdit: plate.picture
+            pictureEdit: plate.picture,
+            idEdit: plate.id
         })
     }, [plate]);
 
 
-    const { id, nameEdit, costEdit, descriptionEdit, categoryEdit, specialEdit, pictureEdit } = plateEdit;
+    const { idEdit, nameEdit, costEdit, descriptionEdit, categoryEdit, specialEdit, pictureEdit } = plateEdit;
 
     const onChangeInputs = e => {
         savePlateEdit({
@@ -86,7 +87,8 @@ const MenuModal = ({plate, categories, isOpen, setIsOpen, saveMenu, menu}) => {
         formData.append("special", specialEdit);
         formData.append("category", categoryEdit);
         formData.append("picture", pictureEdit);
-        formData.append("id", id);
+        formData.append("pictureName", plate.picture);
+        formData.append("id", idEdit);
 
         axios.post(url, formData, {
             headers: {
@@ -99,8 +101,8 @@ const MenuModal = ({plate, categories, isOpen, setIsOpen, saveMenu, menu}) => {
                 console.log(result)
                 if(result.ok) {
                     swal('Success!',`${result.message}`, 'success');
-                    saveMenu([...menu.filter((plat => plat.id !== id)), {
-                        id,
+                    saveMenu([...menu.filter((plat => plat.id != idEdit)), {
+                        idEdit,
                         name: nameEdit,
                         cost: costEdit,
                         description: descriptionEdit,
@@ -108,7 +110,6 @@ const MenuModal = ({plate, categories, isOpen, setIsOpen, saveMenu, menu}) => {
                         category: cate.name,
                         special: specialEdit,
                         picture: result.picture_url
-
                     } ]);
                 }
                 else {
@@ -248,3 +249,4 @@ const MenuModal = ({plate, categories, isOpen, setIsOpen, saveMenu, menu}) => {
 }
  
 export default MenuModal;
+

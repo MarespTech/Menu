@@ -16,7 +16,8 @@ const MenuTable = ({menu, saveMenu, categories}) => {
         description: '',
         special: 0,
         category: '',
-        picture: ''
+        picture: '',
+        id: 0
     });
 
     const data = [];
